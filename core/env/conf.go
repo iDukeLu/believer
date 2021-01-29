@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	DEFAULT_CONF_PATH = "/app/conf/app.yml"
+	defaultConfPath = "/app/conf/app.yml"
 )
 
 type Conf struct {
@@ -74,7 +74,7 @@ func getConfFilePath(profile string) string {
 	pwd, e := os.Getwd()
 	util.Panic(e)
 
-	file := pwd + DEFAULT_CONF_PATH
+	file := pwd + defaultConfPath
 	if profile != "" {
 		file += "-" + profile
 	}
