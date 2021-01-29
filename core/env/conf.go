@@ -27,7 +27,7 @@ type Datasource struct {
 	Password string `yaml:"password"`
 }
 
-func load() *conf {
+func Load() *conf {
 	//应该是 绝对地址
 	pwd, e := os.Getwd()
 	util.Panic(e)
