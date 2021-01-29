@@ -18,7 +18,7 @@ type conf struct {
 
 type Server struct {
 	Port        int    `yaml:"port"`
-	ContextPath string `yaml:"port"`
+	ContextPath string `yaml:"context-path"`
 }
 
 type Datasource struct {
