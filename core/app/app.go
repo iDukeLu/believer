@@ -7,6 +7,7 @@ import (
 	"github.com/iDukeLu/believer/core/env"
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
+	"log"
 )
 
 var DB *gorm.DB
@@ -15,9 +16,9 @@ func Run(route func(r gin.IRouter)) {
 	// load configuration
 	conf := env.Load()
 	// init server
-	go initServer(conf, route)
+	initServer(conf, route)
 	// init database
-	go initDatabase(conf)
+	initDatabase(conf)
 }
 
 func initServer(c *env.Conf, route func(r gin.IRouter)) {
@@ -31,7 +32,6 @@ func initServer(c *env.Conf, route func(r gin.IRouter)) {
 		util.Panic(r.Run(":" + string(port)))
 	}
 	util.Panic(errors.New("please use 'server.port' to configure the server port"))
-
 }
 
 func initDatabase(c *env.Conf) {
