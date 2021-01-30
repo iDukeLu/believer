@@ -17,25 +17,8 @@ type Conf struct {
 	Datasource `yaml:"datasource"`
 }
 
-type Server struct {
-	Port        int    `yaml:"port"`
-	ContextPath string `yaml:"context-path"`
-}
-
-type Datasource struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Database string `yaml:"database"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-}
-
-// load and parse configuration file
+// load、parse、merge configuration file
 func Load() *Conf {
-	return doLoad()
-}
-
-func doLoad() *Conf {
 	defaultConf := parse(read(""))
 	if profile := defaultConf.Profile; profile != "" {
 		profileConf := parse(read(profile))
@@ -68,27 +51,6 @@ func read(profile string) []byte {
 	return yml
 }
 
-func getMergeServer(defaultConf *Conf, profileConf *Conf) Server {
-	defaultServer := defaultConf.Server
-	profileServer := profileConf.Server
-	return Server{
-		getIntProperty(defaultServer.Port != 0, defaultServer.Port, profileServer.Port),
-		getStringProperty(defaultServer.ContextPath != "", defaultServer.ContextPath, profileServer.ContextPath),
-	}
-}
-
-func getMergeDatasource(defaultConf *Conf, profileConf *Conf) Datasource {
-	defaultDatasource := defaultConf.Datasource
-	profileDatasource := profileConf.Datasource
-	return Datasource{
-		getStringProperty(defaultDatasource.Host != "", defaultDatasource.Host, profileDatasource.Host),
-		getIntProperty(defaultDatasource.Port != 0, defaultDatasource.Port, profileDatasource.Port),
-		getStringProperty(defaultDatasource.Database != "", defaultDatasource.Database, profileDatasource.Database),
-		getStringProperty(defaultDatasource.Username != "", defaultDatasource.Username, profileDatasource.Username),
-		getStringProperty(defaultDatasource.Password != "", defaultDatasource.Password, profileDatasource.Password),
-	}
-}
-
 // get the configuration file path of the specified profile
 func getConfFilePath(profile string) string {
 	pwd, e := os.Getwd()
@@ -99,18 +61,4 @@ func getConfFilePath(profile string) string {
 		file += "-" + profile
 	}
 	return file
-}
-
-func getStringProperty(con bool, v1 string, v2 string) string {
-	if con {
-		return v1
-	}
-	return v2
-}
-
-func getIntProperty(con bool, v1 int, v2 int) int {
-	if con {
-		return v1
-	}
-	return v2
 }
