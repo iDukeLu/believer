@@ -7,6 +7,7 @@ import (
 	"github.com/iDukeLu/believer/core/env"
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
+	"strconv"
 )
 
 var DB *gorm.DB
@@ -28,7 +29,7 @@ func initServer(c *env.Conf, route func(r gin.IRouter)) {
 		} else {
 			route(r)
 		}
-		util.LogPanic(r.Run(":" + string(port)))
+		util.LogPanic(r.Run(":" + strconv.Itoa(port)))
 	}
 	util.LogPanic(errors.New("please use 'server.port' to configure the server port"))
 }
