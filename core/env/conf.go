@@ -57,14 +57,14 @@ func merge(defaultConf *Conf, profileConf *Conf) *Conf {
 func parse(yml []byte) *Conf {
 	c := new(Conf)
 	e := yaml.Unmarshal(yml, c)
-	util.Panic(e)
+	util.LogPanic(e)
 	return c
 }
 
 // read the configuration file of the specified profile
 func read(profile string) []byte {
 	yml, e := ioutil.ReadFile(getConfFilePath(profile))
-	util.Panic(e)
+	util.LogPanic(e)
 	return yml
 }
 
@@ -92,7 +92,7 @@ func getMergeDatasource(defaultConf *Conf, profileConf *Conf) Datasource {
 // get the configuration file path of the specified profile
 func getConfFilePath(profile string) string {
 	pwd, e := os.Getwd()
-	util.Panic(e)
+	util.LogPanic(e)
 
 	file := pwd + defaultConfPath
 	if profile != "" {

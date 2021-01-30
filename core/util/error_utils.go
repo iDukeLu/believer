@@ -2,8 +2,8 @@ package util
 
 import "log"
 
-func Panic(err error) {
+func LogPanic(err error) {
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 }

@@ -28,9 +28,9 @@ func initServer(c *env.Conf, route func(r gin.IRouter)) {
 		} else {
 			route(r)
 		}
-		util.Panic(r.Run(":" + string(port)))
+		util.LogPanic(r.Run(":" + string(port)))
 	}
-	util.Panic(errors.New("please use 'server.port' to configure the server port"))
+	util.LogPanic(errors.New("please use 'server.port' to configure the server port"))
 }
 
 func initDatabase(c *env.Conf) {
@@ -49,6 +49,6 @@ func initDatabase(c *env.Conf) {
 	//MYSQL dsn格式： {username}:{password}@tcp({host}:{port})/{Dbname}?charset=utf8&parseTime=True&loc=Local
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, database)
 	db, e := gorm.Open("mysql", dsn)
-	util.Panic(e)
+	util.LogPanic(e)
 	DB = db
 }
