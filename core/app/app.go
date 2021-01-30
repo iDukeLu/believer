@@ -15,10 +15,11 @@ var DB *gorm.DB
 func Run(route func(r gin.IRouter)) {
 	// load configuration
 	conf := env.Load()
-	// init server
-	initServer(conf, route)
 	// init database
 	initDatabase(conf)
+	// init server
+	initServer(conf, route)
+
 }
 
 func initServer(c *env.Conf, route func(r gin.IRouter)) {
