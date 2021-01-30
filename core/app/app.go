@@ -7,7 +7,6 @@ import (
 	"github.com/iDukeLu/believer/core/env"
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
-	"log"
 )
 
 var DB *gorm.DB
