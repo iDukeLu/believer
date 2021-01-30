@@ -7,6 +7,7 @@ import (
 	"github.com/iDukeLu/believer/core/env"
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"strconv"
 )
 
