@@ -53,5 +53,8 @@ func initDatabase(c *env.Conf) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, database)
 	db, e := gorm.Open("mysql", dsn)
 	util.LogPanic(e)
-	DB = db
+	if db != nil {
+		db.SingularTable(true)
+		DB = db
+	}
 }
