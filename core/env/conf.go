@@ -23,7 +23,7 @@ type Server struct {
 }
 
 type Datasource struct {
-	Host     string `yaml:"url"`
+	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	Database string `yaml:"database"`
 	Username string `yaml:"username"`
