@@ -1,11 +1,20 @@
-package middleware
+package env
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iDukeLu/believer/core/env"
 	"github.com/iDukeLu/believer/core/util"
 	"net/http"
 )
+
+type Cors struct {
+	Enable           bool   `yaml:"enable"`
+	AllowOrigin      string `yaml:"allow-origin"`
+	AllowMethods     string `yaml:"allow-methods"`
+	AllowHeaders     string `yaml:"allow-headers"`
+	AllowCredentials string `yaml:"allow-credentials"`
+	ExposeHeaders    string `yaml:"expose-headers"`
+	MaxAge           string `yaml:"max-age"`
+}
 
 const (
 	defaultAllowOrigin      = "*"
@@ -16,7 +25,19 @@ const (
 	defaultMaxAge           = "1800"
 )
 
-func Cors(cors *env.Cors) gin.HandlerFunc {
+func getMergeCors(defaultCors *Cors, profileCors *Cors) Cors {
+	return Cors{
+		util.GetBoolDefault(defaultCors.Enable, profileCors.Enable),
+		util.GetStringDefault(defaultCors.AllowOrigin, profileCors.AllowOrigin),
+		util.GetStringDefault(defaultCors.AllowMethods, profileCors.AllowMethods),
+		util.GetStringDefault(defaultCors.AllowHeaders, profileCors.AllowHeaders),
+		util.GetStringDefault(defaultCors.AllowCredentials, profileCors.AllowCredentials),
+		util.GetStringDefault(defaultCors.ExposeHeaders, profileCors.ExposeHeaders),
+		util.GetStringDefault(defaultCors.MaxAge, profileCors.MaxAge),
+	}
+}
+
+func InitCors(cors *Cors) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if origin := c.Request.Header.Get("Origin"); origin != "" {
 			c.Header("Access-Control-Allow-Origin", util.GetStringDefault(cors.AllowOrigin, defaultAllowOrigin))
