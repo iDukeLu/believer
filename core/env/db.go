@@ -2,6 +2,7 @@ package env
 
 import (
 	"fmt"
+	"github.com/iDukeLu/believer/core/app"
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -28,7 +29,7 @@ func getMergeDatasource(defaultConf *Conf, profileConf *Conf) Datasource {
 	}
 }
 
-func InitDatabase(c *Conf) *gorm.DB {
+func InitDatabase(c *Conf) {
 	datasource := c.Datasource
 	host := datasource.Host
 	port := datasource.Port
@@ -42,8 +43,7 @@ func InitDatabase(c *Conf) *gorm.DB {
 		if db, e := gorm.Open("mysql", dsn); db != nil {
 			util.LogPanic(e)
 			db.SingularTable(true)
-			return db
+			app.DB = db
 		}
 	}
-	return nil
 }
