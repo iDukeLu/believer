@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/iDukeLu/believer/core/env"
+	"github.com/iDukeLu/believer/core/util"
 	"net/http"
 )
 
@@ -14,15 +16,15 @@ const (
 	defaultMaxAge           = "1800"
 )
 
-func Cors() gin.HandlerFunc {
+func Cors(cors *env.Cors) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if origin := c.Request.Header.Get("Origin"); origin != "" {
-			c.Header("Access-Control-Allow-Origin", "*")
-			c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
-			c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Cache-Control, Content-Language, Content-Type")
-			c.Header("Access-Control-Allow-Credentials", "true")
-
+			c.Header("Access-Control-Allow-Origin", util.GetStringDefault(cors.AllowOrigin, defaultAllowOrigin))
+			c.Header("Access-Control-Allow-Methods", util.GetStringDefault(cors.AllowMethods, defaultAllowMethods))
+			c.Header("Access-Control-Allow-Headers", util.GetStringDefault(cors.AllowHeaders, defaultAllowHeaders))
+			c.Header("Access-Control-Allow-Credentials", util.GetStringDefault(cors.AllowCredentials, defaultAllowCredentials))
+			c.Header("Access-Control-Expose-Headers", util.GetStringDefault(cors.ExposeHeaders, defaultExposeHeaders))
+			c.Header("Access-Control-Max-Age", util.GetStringDefault(cors.MaxAge, defaultMaxAge))
 		}
 		if c.Request.Method == http.MethodOptions {
 			c.AbortWithStatus(http.StatusNoContent)

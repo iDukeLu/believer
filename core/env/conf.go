@@ -12,9 +12,9 @@ const (
 )
 
 type Conf struct {
-	Profile    string `yaml:"profile"`
-	Server     `yaml:"server"`
-	Datasource `yaml:"datasource"`
+	Profile    string     `yaml:"profile"`
+	Server     Server     `yaml:"server"`
+	Datasource Datasource `yaml:"datasource"`
 }
 
 // load、parse、merge configuration file
