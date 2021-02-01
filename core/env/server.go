@@ -28,13 +28,13 @@ func getMergeServer(defaultConf *Conf, profileConf *Conf) Server {
 func InitServer(c *Conf, route func(r gin.IRouter), t time.Time) {
 	if port := c.Server.Port; port > 0 {
 		log.Println("Initializing Server...")
+		mode(c)
 		e := gin.Default()
 		r := getRouter(c, e)
-		mode(c)
 		route(r)
 		middleware(c, r)
 		log.Printf("Server started on port(s): %v (http) with context path '%v'", c.Server.Port, c.Server.ContextPath)
-		log.Printf("Started Application in %v seconds", time.Now().Sub(t)/1000)
+		log.Printf("Started Application in %v seconds", time.Now().Sub(t).Milliseconds()/1000)
 		util.LogPanic(e.Run(":" + strconv.Itoa(port)))
 	}
 	util.LogPanic(errors.New("please use 'server.port' to configure the server port"))
