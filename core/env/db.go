@@ -6,6 +6,7 @@ import (
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"log"
 	"strings"
 )
 
@@ -31,6 +32,7 @@ func getMergeDatasource(defaultConf *Conf, profileConf *Conf) Datasource {
 }
 
 func InitDatabase(c *Conf) {
+	log.Println("Initializing Datasource...")
 	datasource := c.Datasource
 	host := datasource.Host
 	port := datasource.Port
@@ -52,4 +54,13 @@ func InitDatabase(c *Conf) {
 			mapper.DBS[database] = connection
 		}
 	}
+	log.Printf("Datasource complete initialization: %v \n", getKeys(&mapper.DBS))
+}
+
+func getKeys(m *map[string]*gorm.DB) []string {
+	keys := make([]string, len(*m))
+	for k := range *m {
+		keys = append(keys, k)
+	}
+	return keys
 }

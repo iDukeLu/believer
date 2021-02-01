@@ -4,6 +4,7 @@ import (
 	"github.com/iDukeLu/believer/core/util"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -21,10 +22,12 @@ type Conf struct {
 // load、parse、merge configuration file
 func Load() *Conf {
 	defaultConf := parse(read(""))
+	log.Printf("The following profiles are active: %v", getActivityProfile(defaultConf))
 	if profile := defaultConf.Profile; profile != "" {
 		profileConf := parse(read(profile))
 		return merge(defaultConf, profileConf)
 	}
+	log.Println("Configuration finished loading")
 	return defaultConf
 }
 
@@ -62,4 +65,11 @@ func getConfFilePath(profile string) string {
 		path += "-" + profile
 	}
 	return path + defaultConfFilesSuffix
+}
+
+func getActivityProfile(c *Conf) string {
+	if p := c.Profile; p != "" {
+		return p
+	}
+	return "default"
 }
