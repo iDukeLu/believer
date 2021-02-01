@@ -33,13 +33,9 @@ func InitServer(c *Conf, route func(r gin.IRouter), t time.Time) {
 		mode(c)
 		route(r)
 		middleware(c, r)
-		if err := e.Run(":" + strconv.Itoa(port)); err == nil {
-			log.Printf("Server started on port(s): %v (http) with context path '%v'", c.Server.Port, c.Server.ContextPath)
-			log.Printf("Started Application in %v seconds", time.Now().Sub(t)/1000)
-		} else {
-			log.Panic("Server start failed！")
-		}
-
+		log.Printf("Server started on port(s): %v (http) with context path '%v'", c.Server.Port, c.Server.ContextPath)
+		log.Printf("Started Application in %v seconds", time.Now().Sub(t)/1000)
+		util.LogPanic(e.Run(":" + strconv.Itoa(port)))
 	}
 	util.LogPanic(errors.New("please use 'server.port' to configure the server port"))
 }
