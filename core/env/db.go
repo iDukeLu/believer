@@ -2,7 +2,7 @@ package env
 
 import (
 	"fmt"
-	"github.com/iDukeLu/believer/core/app"
+	"github.com/iDukeLu/believer/core/mapper"
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -43,7 +43,7 @@ func InitDatabase(c *Conf) {
 		if db, e := gorm.Open("mysql", dsn); db != nil {
 			util.LogPanic(e)
 			db.SingularTable(true)
-			app.DB = db
+			mapper.DB = db
 		}
 	}
 }
