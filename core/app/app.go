@@ -9,11 +9,11 @@ import (
 func Run(route func(r gin.IRouter)) {
 	s := time.Now()
 
-	// init banner
-	env.InitBanner()
-
 	// init log
 	env.InitLog()
+
+	// init banner
+	env.InitBanner()
 
 	// load configuration
 	conf := env.Load()
