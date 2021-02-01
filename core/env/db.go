@@ -6,14 +6,15 @@ import (
 	"github.com/iDukeLu/believer/core/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"strings"
 )
 
 type Datasource struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Database string `yaml:"database"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Host      string `yaml:"host"`
+	Port      int    `yaml:"port"`
+	Databases string `yaml:"databases"`
+	Username  string `yaml:"username"`
+	Password  string `yaml:"password"`
 }
 
 func getMergeDatasource(defaultConf *Conf, profileConf *Conf) Datasource {
@@ -23,7 +24,7 @@ func getMergeDatasource(defaultConf *Conf, profileConf *Conf) Datasource {
 	return Datasource{
 		util.GetStringDefault(defaultDatasource.Host, profileDatasource.Host),
 		util.GetIntDefault(defaultDatasource.Port, profileDatasource.Port),
-		util.GetStringDefault(defaultDatasource.Database, profileDatasource.Database),
+		util.GetStringDefault(defaultDatasource.Databases, profileDatasource.Databases),
 		util.GetStringDefault(defaultDatasource.Username, profileDatasource.Username),
 		util.GetStringDefault(defaultDatasource.Password, profileDatasource.Password),
 	}
@@ -33,17 +34,22 @@ func InitDatabase(c *Conf) {
 	datasource := c.Datasource
 	host := datasource.Host
 	port := datasource.Port
-	database := datasource.Database
+	databases := datasource.Databases
 	username := datasource.Username
 	password := datasource.Password
 
-	if host != "" && port != 0 && database != "" && username != "" && password != "" {
+	if host == "" || port == 0 || databases == "" || username == "" || password == "" {
+		return
+	}
+
+	for _, database := range strings.Split(databases, ",") {
+		database = strings.Trim(database, " ")
 		//MYSQL dsn格式： {username}:{password}@tcp({host}:{port})/{Dbname}?charset=utf8&parseTime=True&loc=Local
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, database)
-		if db, e := gorm.Open("mysql", dsn); db != nil {
+		if connection, e := gorm.Open("mysql", dsn); connection != nil {
 			util.LogPanic(e)
-			db.SingularTable(true)
-			mapper.DB = db
+			connection.SingularTable(true)
+			mapper.DBS[database] = connection
 		}
 	}
 }
