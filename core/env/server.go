@@ -6,12 +6,13 @@ import (
 	"github.com/iDukeLu/believer/core/util"
 	"log"
 	"strconv"
+	"time"
 )
 
 type Server struct {
 	Port        int    `yaml:"port"`
 	ContextPath string `yaml:"context-path"`
-	Cors        Cors   `yaml:"InitCors"`
+	Cors        Cors   `yaml:"cors"`
 }
 
 func getMergeServer(defaultConf *Conf, profileConf *Conf) Server {
@@ -24,7 +25,7 @@ func getMergeServer(defaultConf *Conf, profileConf *Conf) Server {
 	}
 }
 
-func InitServer(c *Conf, route func(r gin.IRouter)) {
+func InitServer(c *Conf, route func(r gin.IRouter), t time.Time) {
 	if port := c.Server.Port; port > 0 {
 		log.Println("Initializing Server...")
 		e := gin.Default()
@@ -32,8 +33,13 @@ func InitServer(c *Conf, route func(r gin.IRouter)) {
 		mode(c)
 		route(r)
 		middleware(c, r)
-		util.LogPanic(e.Run(":" + strconv.Itoa(port)))
-		log.Printf("Server started on port(s): %v (http) with context path '%v'", c.Server.Port, c.Server.ContextPath)
+		if err := e.Run(":" + strconv.Itoa(port)); err == nil {
+			log.Printf("Server started on port(s): %v (http) with context path '%v'", c.Server.Port, c.Server.ContextPath)
+			log.Printf("Started Application in %v seconds", time.Now().Sub(t)/1000)
+		} else {
+			log.Panic("Server start failed！")
+		}
+
 	}
 	util.LogPanic(errors.New("please use 'server.port' to configure the server port"))
 }
