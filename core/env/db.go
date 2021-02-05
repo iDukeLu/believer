@@ -45,6 +45,7 @@ func InitDatabase(c *Conf) {
 			return
 		}
 
+		databaseMap := make(map[string]*gorm.DB)
 		for _, database := range strings.Split(databases, ",") {
 			database = strings.Trim(database, " ")
 			//MYSQL dsn格式： {username}:{password}@tcp({host}:{port})/{Dbname}?charset=utf8&parseTime=True&loc=Local
@@ -52,9 +53,10 @@ func InitDatabase(c *Conf) {
 			if connection, e := gorm.Open("mysql", dsn); connection != nil {
 				util.LogPanic(e)
 				connection.SingularTable(true)
-				mapper.DBS[name] = map[string]*gorm.DB{database: connection}
+				databaseMap[database] = connection
 			}
 		}
+		mapper.DBS[name] = databaseMap
 		log.Printf("Datasource complete initialization: %v - %v \n", name, getKeys(mapper.DBS[name]))
 	}
 }
