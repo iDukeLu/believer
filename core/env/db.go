@@ -52,7 +52,7 @@ func InitDatabase(c *Conf) {
 			if connection, e := gorm.Open("mysql", dsn); connection != nil {
 				util.LogPanic(e)
 				connection.SingularTable(true)
-				mapper.DBS[name][database] = connection
+				mapper.DBS[name] = map[string]*gorm.DB{name: connection}
 			}
 		}
 		log.Printf("Datasource complete initialization: %v - %v \n", name, getKeys(mapper.DBS[name]))
