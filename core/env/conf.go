@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	defaultConfPath        = "/app/conf/app"
+	defaultConfPath        = "/conf/app"
 	defaultConfFilesSuffix = ".yml"
 )
 
